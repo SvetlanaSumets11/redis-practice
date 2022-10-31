@@ -33,34 +33,34 @@ the field do not exist, 0 is returned. Time complexity: O(1)
 from client import redis
 
 
-def redis_hash_example(array):
-    redis.hset(array, 'first', 1)
-    redis.hset(array, 'second', 2)
-    assert redis.hkeys(array) == [b'first', b'second']
-    assert redis.hvals(array) == [b'1', b'2']
-    assert redis.hgetall(array) == {b'first': b'1', b'second': b'2'}
-    assert redis.hget(array, 'second') == b'2'
-    assert redis.hlen(array) == 2
+def redis_hash_example(test_hash: str):
+    redis.hset(test_hash, 'first', 1)
+    redis.hset(test_hash, 'second', 2)
+    assert redis.hkeys(test_hash) == [b'first', b'second']
+    assert redis.hvals(test_hash) == [b'1', b'2']
+    assert redis.hgetall(test_hash) == {b'first': b'1', b'second': b'2'}
+    assert redis.hget(test_hash, 'second') == b'2'
+    assert redis.hlen(test_hash) == 2
 
-    redis.hdel(array, 'first')
-    assert redis.hgetall(array) == {b'second': b'2'}
+    redis.hdel(test_hash, 'first')
+    assert redis.hgetall(test_hash) == {b'second': b'2'}
 
-    assert redis.hexists(array, 'first') is False
-    assert redis.hexists(array, 'second') is True
+    assert redis.hexists(test_hash, 'first') is False
+    assert redis.hexists(test_hash, 'second') is True
 
-    redis.hincrby(array, 'third', 3)
-    assert redis.hgetall(array) == {b'second': b'2', b'third': b'3'}
+    redis.hincrby(test_hash, 'third', 3)
+    assert redis.hgetall(test_hash) == {b'second': b'2', b'third': b'3'}
 
-    assert redis.hincrbyfloat(array, 'second', 4.5) == 6.5
-    assert redis.hgetall(array) == {b'second': b'6.5', b'third': b'3'}
+    assert redis.hincrbyfloat(test_hash, 'second', 4.5) == 6.5
+    assert redis.hgetall(test_hash) == {b'second': b'6.5', b'third': b'3'}
 
-    assert redis.hmget(array, 'second') == [b'6.5']
+    assert redis.hmget(test_hash, 'second') == [b'6.5']
 
-    redis.hsetnx(array, 'seventh', 7)
-    assert redis.hgetall(array) == {b'second': b'6.5', b'third': b'3', b'seventh': b'7'}
+    redis.hsetnx(test_hash, 'seventh', 7)
+    assert redis.hgetall(test_hash) == {b'second': b'6.5', b'third': b'3', b'seventh': b'7'}
 
-    redis.hset(array, 8, 'eighth')
-    assert redis.hstrlen(array, 8) == 6
+    redis.hset(test_hash, 8, 'eighth')
+    assert redis.hstrlen(test_hash, 8) == 6
 
 
 redis_hash_example('test_hash')

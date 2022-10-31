@@ -33,20 +33,20 @@ Time complexity: O(N) where N is the total number of elements in all given sets.
 from client import redis
 
 
-def redis_set_example(array):
+def redis_set_example(test_set: str):
     for i in range(5):
-        redis.sadd(array, i)
-    assert redis.smembers(array) == {b'0', b'1', b'2', b'3', b'4'}
+        redis.sadd(test_set, i)
+    assert redis.smembers(test_set) == {b'0', b'1', b'2', b'3', b'4'}
 
-    array_len = redis.scard(array)
+    array_len = redis.scard(test_set)
     assert array_len == 5
 
-    redis.srem(array, 2)
-    assert redis.smembers(array) == {b'4', b'3', b'1', b'0'}
+    redis.srem(test_set, 2)
+    assert redis.smembers(test_set) == {b'4', b'3', b'1', b'0'}
 
-    for i in range(redis.scard(array)):
-        redis.spop(array)
-    assert redis.smembers(array) == set()
+    for i in range(redis.scard(test_set)):
+        redis.spop(test_set)
+    assert redis.smembers(test_set) == set()
 
     additional_set = 'additional_set'
     for i in (4, 2, 5, 7):
@@ -54,31 +54,31 @@ def redis_set_example(array):
     assert redis.smembers(additional_set) == {b'4', b'2', b'5', b'7'}
 
     for i in range(5):
-        redis.sadd(array, i)
+        redis.sadd(test_set, i)
 
-    difference = redis.sdiff(array, additional_set)
+    difference = redis.sdiff(test_set, additional_set)
     assert difference == {b'1', b'0', b'3'}
 
-    redis.sdiffstore(0, array, additional_set)
-    assert redis.smembers(array) == {b'2', b'0', b'1', b'4', b'3'}
+    redis.sdiffstore(0, test_set, additional_set)
+    assert redis.smembers(test_set) == {b'2', b'0', b'1', b'4', b'3'}
 
-    intersection = redis.sinter(additional_set, array)
+    intersection = redis.sinter(additional_set, test_set)
     assert intersection == {b'2', b'4'}
 
-    redis.sinterstore('example', additional_set, array)
+    redis.sinterstore('example', additional_set, test_set)
     assert redis.smembers('example') == {b'2', b'4'}
 
-    assert redis.sismember(array, 2) is True
-    assert redis.sismember(array, 78) is False
+    assert redis.sismember(test_set, 2) is True
+    assert redis.sismember(test_set, 78) is False
 
-    redis.smove(array, additional_set, 0)
-    assert redis.smembers(array) == {b'2', b'1', b'4', b'3'}
+    redis.smove(test_set, additional_set, 0)
+    assert redis.smembers(test_set) == {b'2', b'1', b'4', b'3'}
     assert redis.smembers(additional_set) == {b'0', b'4', b'2', b'5', b'7'}
 
-    union = redis.sunion(array, additional_set)
+    union = redis.sunion(test_set, additional_set)
     assert union == {b'2', b'1', b'4', b'3', b'0', b'5', b'7'}
 
-    redis.sunionstore('temp', array, additional_set)
+    redis.sunionstore('temp', test_set, additional_set)
     assert redis.smembers('temp') == {b'2', b'1', b'4', b'3', b'0', b'5', b'7'}
 
 

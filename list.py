@@ -46,68 +46,68 @@ Time complexity: O(N) where N is the number of elements to be removed by the ope
 from client import redis
 
 
-def redis_list_example(array: str):
+def redis_list_example(test_list: str):
     for i in range(5):
-        redis.lpush(array, i)
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'4', b'3', b'2', b'1', b'0']
+        redis.lpush(test_list, i)
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'4', b'3', b'2', b'1', b'0']
 
     for i in range(4):
-        redis.rpush(array, i)
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'4', b'3', b'2', b'1', b'0', b'0', b'1', b'2', b'3']
+        redis.rpush(test_list, i)
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'4', b'3', b'2', b'1', b'0', b'0', b'1', b'2', b'3']
 
-    array_len = redis.llen(array)
+    array_len = redis.llen(test_list)
     assert array_len == 9
 
-    redis.lrem(array, 2, 3)
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'4', b'2', b'1', b'0', b'0', b'1', b'2']
+    redis.lrem(test_list, 2, 3)
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'4', b'2', b'1', b'0', b'0', b'1', b'2']
 
     for i in range(2):
-        redis.lpop(array)
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'1', b'0', b'0', b'1', b'2']
+        redis.lpop(test_list)
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'1', b'0', b'0', b'1', b'2']
 
     for i in range(2):
-        redis.rpop(array)
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'1', b'0', b'0']
+        redis.rpop(test_list)
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'1', b'0', b'0']
 
-    redis.linsert(array, 'after', 1, 78)
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'1', b'78', b'0', b'0']
+    redis.linsert(test_list, 'after', 1, 78)
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'1', b'78', b'0', b'0']
 
-    redis.linsert(array, 'before', 1, 66)
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'66', b'1', b'78', b'0', b'0']
+    redis.linsert(test_list, 'before', 1, 66)
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'66', b'1', b'78', b'0', b'0']
 
-    data = redis.blpop(array)[1]
+    data = redis.blpop(test_list)[1]
     assert data == b'66'
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'1', b'78', b'0', b'0']
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'1', b'78', b'0', b'0']
 
-    data = redis.brpop(array)[1]
+    data = redis.brpop(test_list)[1]
     assert data == b'0'
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'1', b'78', b'0']
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'1', b'78', b'0']
 
-    redis.lset(array, 2, 4)
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'1', b'78', b'4']
+    redis.lset(test_list, 2, 4)
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'1', b'78', b'4']
 
     additional_array = 'example'
-    redis.rpoplpush(array, additional_array)
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'1', b'78']
-    assert redis.lrange(additional_array, 0, redis.llen(array) - 1) == [b'4']
+    redis.rpoplpush(test_list, additional_array)
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'1', b'78']
+    assert redis.lrange(additional_array, 0, redis.llen(test_list) - 1) == [b'4']
 
-    redis.brpoplpush(array, additional_array)
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'1']
-    assert redis.lrange(additional_array, 0, redis.llen(array) - 1) == [b'78']
+    redis.brpoplpush(test_list, additional_array)
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'1']
+    assert redis.lrange(additional_array, 0, redis.llen(test_list) - 1) == [b'78']
 
-    num = redis.lpushx(array, 4)
+    num = redis.lpushx(test_list, 4)
     assert num == 2
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'4', b'1']
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'4', b'1']
 
-    num = redis.rpushx(array, 5)
+    num = redis.rpushx(test_list, 5)
     assert num == 3
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'4', b'1', b'5']
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'4', b'1', b'5']
 
-    element = redis.lindex(array, 2)
+    element = redis.lindex(test_list, 2)
     assert element == b'5'
 
-    redis.ltrim(array, 0, 1)
-    assert redis.lrange(array, 0, redis.llen(array) - 1) == [b'4', b'1']
+    redis.ltrim(test_list, 0, 1)
+    assert redis.lrange(test_list, 0, redis.llen(test_list) - 1) == [b'4', b'1']
 
 
 redis_list_example('test_list')
